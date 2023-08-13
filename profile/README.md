@@ -1,23 +1,110 @@
-## Salut ! 👋
-### Bienvenue sur l'organisation officielle de la Ronde de l'Espoir !
+In 2023, we developed a series of websites and utilities for the Ronde de l'Espoir :
 
-Alors, qu'est-ce que la Ronde de l'Espoir ?
-C'est une association à but non lucratif du Lycée La Merci Littoral (la Grande-Motte) dont le but est de récolter de l'argent pour les enfants atteints du cancer à l'hôpital.
 
-Et nous, on est là pour coder le site web et la plateforme de réservation en ligne du *merch* de la Ronde !
-Oui, oui, un site web !
+| Name | Purpose | 2023 URL |
+|---|---|---|
+| Main | showcase | [ronde-de-l-espoir.fr]() |
+| Paiment | donation platform | [paiement.ronde-de-l-espoir.fr]() |
+| Inscription | Gala booking platform | [inscription.ronde-de-l-espoir.fr]() |
+| App | WebView-based app | NaN |
+| app-www | Website displayed in app | [app-www.ronde-de-l-espoir.fr]() |
 
-Bon, allez, je vous laisse allez à [ronde-de-l-espoir.fr](https://ronde-de-l-espoir.fr) pour voir l'avancée des travaux !
+Each of these repos will be detailed and explained :
+* generally here, in documentation
+* with code comments
 
-Et puis, si vous pouvez, n'hésitez pas à laissez un don ! Même 10€, c'est déjà ça !
 
-<!--
+## General information
 
-**Here are some ideas to get you started:**
+### Hosting
 
-🙋‍♀️ A short introduction - what is your organization all about?
-🌈 Contribution guidelines - how can the community get involved?
-👩‍💻 Useful resources - where can the community find your docs? Is there anything else the community should know?
-🍿 Fun facts - what does your team eat for breakfast?
-🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
--->
+In 2023, we were hosted by [o2switch.fr](), for 85€.
+
+Despite the price, I think you should continue using o2switch because :
+* the uptime is great
+* they have basically a unique price, but with it you get everything (unlimited storage, unlimited email accounts...)
+* the support is effective
+* the interface used is cPanel : it is't hugely customizable, it looks old, but it does allow you to chnage quite a lot of settings
+
+Cons :
+* pricey
+* it is ahred hosting, so you are locked in your user `/home` folder. This means that you cannot edit the Apache or PHP configuration files.
+
+
+### Git Usage
+
+We have been using Git since the very beginning of the project.
+
+At first, the idea was to have Git on the server, and communicate directly with it.
+But we envied the ease of the GitHub GUI... so we used GitHub !
+
+The system architecture is the following :
+
+Changes aren't allowed in the `main` branch, so devlopers must create another branch to code. Once they finish, they must open a Pull Request (PR).
+This allows for control on the standard `git merge` procedure.
+
+Before being merged, the Pull Request goes through some checks but most importantly requires approval of other members of the organisation. The number of people required can be set in the repository settings where you can completely disable *branch protection*. This functionnality is only available in public repos.
+
+After a few Pull Requests, we group them in a release.
+Please follow the semantic guidelines for naming the versions.
+
+The changes are sent over to the server via GitHub workflows/actions (other advantage of using GitHub) :
+* main.yml : this sends the changes in the `main` branch to the server in the `dev.` directory
+* release.yml : this sends the changes to the public URL at release creation.
+
+These files are always located in the `./.github/workflows` directory of the project.
+
+General `main.yml` (please remove the comments to reuse these scripts):
+
+```yml
+on: push
+name: 🚀 Deploy website on push
+jobs:
+  web-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code of main
+      uses: actions/checkout@v3
+      with :
+        ref: main // gets the filed of the main branch
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3         //this is the subaction we use to send the files via FTP
+      with:
+        server: <domain>
+        username: ${{ secrets.username }}
+        password: ${{ secrets.password }}
+        server-dir: <path to the folder where the files must be saved>
+```
+
+General `release.yml` (please remove the comments to reuse these scripts) :
+
+```yml
+on: 
+  release:
+    types: [published]
+
+jobs:
+  release-latest-tag:
+    name: Release Latest Tag
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest release
+      uses: actions/checkout@v3
+      with :
+        ref: ${{ env.GITHUB_SHA }}
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: <domain>
+        username: ${{ secrets.username }}
+        password: ${{ secrets.password }}
+        server-dir: <path to the folder where the files must be saved>
+```
+
+
+The `server-dir` must have a trailing slash and start with a slash (apparently the first slash means "at the root of the FTP root" and not "at the server's root").
+
+For the secrets :
+* for public repositories : you can set the secret in the organization settings
+* for private repositories : you must set the secret individually, in the repository's settings
