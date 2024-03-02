@@ -31,8 +31,19 @@ Despite the price, I think you should continue using o2switch because :
 
 Cons :
 * pricey
-* it is ahred hosting, so you are locked in your user `/home` folder. This means that you cannot edit the Apache or PHP configuration files.
+* it is shared hosting, so you are locked in your user `/home` folder. This means that you cannot edit the Apache or PHP configuration files (I'd recommend taking a VPS, as it allows for much more flexibility)
 
+### Domain name problems
+
+In the [o2switch.fr]() bundle was included the `ronde-de-l-espoir.fr` domain name (and subdomains domains).
+But when the subscription ended in november 2023, the domain name was available, so somebody decided to use it for a... ahem... slightly different purpose.
+
+I'm writing this in 2024, hopefully I will be able to retrieve the name in a year, when their subscription ends...
+
+Otherwise, you will need to choose a different domain, such as `la-ronde-de-l-espoir.fr` or so...
+But don't make the same mistake as us, keep the domain name between *rondes* ; it will only cost 12€ a year, and it's worth it, because every time Google destroys the SEO data if the website is down.
+
+Talking about the website being down, maybe consider using a very cheap server, even a self-hosted one on a Raspberry Pi, just to keep the site running for the SEO...
 
 ### Git Usage
 
