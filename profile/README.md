@@ -1,8 +1,11 @@
 # La Ronde de l'Espoir !
 
-
 In 2023, we developed a series of websites and utilities for the Ronde de l'Espoir :
 
+> [!CAUTION]
+> Links redirect to adult website...
+>
+> The domain name was bought by *strange* people...
 
 | Name | Purpose | 2023 URL |
 |---|---|---|
@@ -13,7 +16,7 @@ In 2023, we developed a series of websites and utilities for the Ronde de l'Espo
 | app-www | Website displayed in app | [app-www.ronde-de-l-espoir.fr]() |
 
 Each of these repos will be detailed and explained :
-* generally here, in documentation
+* in their respective README.md
 * with code comments
 
 
